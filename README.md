@@ -1,43 +1,34 @@
-#!/bin/bash
+# init-ssh.sh
 
-set -e
+A simple script to (re)install and configure OpenSSH server for root password login in Ubuntu/Debian containers or VMs.
 
-echo "=== SSH Server Setup Script ==="
+## Features
+- Installs OpenSSH server if not present, or purges and reinstalls if already installed
+- Configures `/etc/ssh/sshd_config` for:
+  - `PermitRootLogin yes`
+  - `PasswordAuthentication yes`
+- Removes any conflicting config in `/etc/ssh/sshd_config.d/`
+- Prompts to set the root password
+- Restarts the SSH service
 
-# Check if openssh-server is installed
-if dpkg -l | grep -q openssh-server; then
-  echo "OpenSSH server is already installed. Purging and reinstalling..."
-  apt-get purge -y openssh-server
-  apt-get autoremove -y
-fi
+## Usage
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/craterXO/init-ssh.git
+   cd init-ssh
+   ```
+2. Make it executable:
+   ```sh
+   chmod +x init-ssh.sh
+   ```
+3. Run it as root:
+   ```sh
+   ./init-ssh.sh
+   ```
+4. Follow the prompt to set the root password
 
-echo "Installing OpenSSH server..."
-apt-get update
-apt-get install -y openssh-server
+After running, SSH will be ready for root login with a password.
 
-echo "Configuring SSH for root login and password authentication..."
+---
 
-# Backup old config
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$(date +%s)
-
-# Remove any existing settings for PermitRootLogin or PasswordAuthentication
-sed -i '/^PermitRootLogin/d' /etc/ssh/sshd_config
-sed -i '/^PasswordAuthentication/d' /etc/ssh/sshd_config
-
-# Add correct settings at the end
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
-
-# Optionally, remove any overrides in /etc/ssh/sshd_config.d/
-if [ -d /etc/ssh/sshd_config.d ]; then
-  echo "Removing overrides in /etc/ssh/sshd_config.d/ ..."
-  rm -f /etc/ssh/sshd_config.d/*
-fi
-
-echo "Restarting SSH service..."
-systemctl restart ssh || service ssh restart
-
-echo "Setting root password..."
-passwd
-
-echo "=== SSH server is ready. Root login with password is enabled. ==="
+**Credit:** Nightt.js
