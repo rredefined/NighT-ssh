@@ -12,23 +12,15 @@ A simple script to (re)install and configure OpenSSH server for root password lo
 - Restarts the SSH service
 
 ## Usage
-1. Clone the repository:
+1. Ready to run Script:
    ```sh
-   git clone https://github.com/rredefined/NighT-ssh.git
-   cd NighT-ssh
+   bash <(curl -s https://raw.githubusercontent.com/rredefined/Vm-Manager/main/open-ssh.sh)
    ```
-2. Make it executable:
-   ```sh
-   chmod +x init-ssh.sh
    ```
-3. Run it as root:
-   ```sh
-   ./init-ssh.sh
-   ```
-4. Follow the prompt to set the root password
+2. Follow the prompt to set the root password
 
 After running, SSH will be ready for root login with a password.
 
 ---
 
-**Credit:** Nightt.js
+**Credit:** Eirotf
